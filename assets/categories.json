@@ -1,0 +1,142 @@
+{
+	"accessoires":{
+		"nom":"Accessoires",
+		"produits":[
+			{
+				"bijoux":{
+					"nom":"Bijoux"
+				}
+			},
+			{
+				"ceintures":{
+					"nom":"Ceintures"
+				}
+			},
+			{
+				"chapeaux_femmes":{
+					"nom":"Chapeaux femmes"
+				}
+			},
+			{
+				"foulards":{
+					"nom":"Foulards"
+				}
+			},
+			{
+				"montres":{
+					"nom":"Montres"
+				}
+			},
+			{
+				"sacs_et_pochettes":{
+					"nom":"Sacs et pochettes"
+				}
+			}
+		]
+	},
+	"cheveux":{
+		"nom":"Cheveux",
+		"produits":[
+			{
+				"greffes":{
+					"nom":"Greffes"
+				}
+			},
+			{
+				"meches_et_tissages":{
+					"nom":"Mêches et tissages"
+				}
+			},
+			{
+				"seches_cheveux_et_lisseurs":{
+					"nom":"Sèches cheveux et lisseurs"
+				}
+			}
+		]
+	},
+	"cosmetique":{
+		"nom":"Cosmetique",
+		"produits":[
+			{
+				"deodorants":{
+					"nom":"Déodorants"
+				}
+			},
+			{
+				"maquillages":{
+					"nom":"Maquillages"
+				}
+			},
+			{
+				"soins_du_corps_et_epilation":{
+					"nom":"Soins du corps et épilation"
+				}
+			},
+			{
+				"soins_du_visage":{
+					"nom":"Soins du visage"
+				}
+			},
+			{
+				"soins_pour_cheveux":{
+					"nom":"Soins pour cheveux"
+				}
+			}
+		]
+	},
+	"vetements":{
+		"nom":"Vêtements",
+		"produits":[
+			{
+				"afritudes":{
+					"nom":"Afritudes"
+				}
+			},
+			{
+				"chaussettes_et_collants":{
+					"nom":"Chaussettes et collants"
+				}
+			},
+			{
+				"chaussures":{
+					"nom":"Chaussures"
+				}
+			},
+			{
+				"chemises":{
+					"nom":"Chemises"
+				}
+			},
+			{
+				"jupes":{
+					"nom":"Jupes"
+				}
+			},
+			{
+				"lingerie":{
+					"nom":"Lingerie"
+				}
+			},
+			{
+				"pantalons_et_short":{
+					"nom":"Pantalons et short"
+				}
+			},
+			{
+				"robes":{
+					"nom":"Robes"
+				}
+			},
+			{
+				"tops_et_t-shirts":{
+					"nom":"Tops et t-shirts"
+				}
+			},
+			{
+				"vestes_et_manteaux":{
+					"nom":"Vestes et manteaux"
+				}
+			}
+		]
+	}
+}
