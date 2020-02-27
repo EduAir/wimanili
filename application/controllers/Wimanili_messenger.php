@@ -21,7 +21,7 @@ require APPPATH . 'libraries/Format.php';
  * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
-class Wimanili extends REST_Controller {
+class Wimanili_user extends REST_Controller {
 
     function __construct()
     {
@@ -69,7 +69,16 @@ class Wimanili extends REST_Controller {
         $id_messenger = $this->post['messenger_user_id'];
     }
 
-    //
+    //Login
+
+    //Update profil
+
+    //Delete user
+
+    //Bann user
+
+
+
 
 
 
