@@ -36,10 +36,12 @@ class Wimanili_user extends REST_Controller {
 
         $this->post = $_REQUEST;
 
-
-        $this->load->model('Model_user');
+        $this->load->model('User');
+        $this->load->controller('Wimanili_mailer');
 
         $this->load->library('upload');
+
+        $this->load->library('form_validation');
     }
     
 
@@ -60,27 +62,48 @@ class Wimanili_user extends REST_Controller {
    
 
     //Inscriptions
-    public function signin_post()
+    public function signup_post()
     {
-        $user_name = $this->post['user_name'];
-        $user_password = $this->post['user_password'];
-        $user_gender = $this->post['user_gender'];
-        $user_policy = $this->post['user_policy'];
-        $user_email = $this->post['user_email'];
-        $user_phoneBrand = $this->['user_phoneBrand'];
+        //On valide le formaulaire
+        $this->form_validation->set_rules('user_name', 'user_name', 'trim|required|min_length[5]|max_length[30]');
+        $this->form_validation->set_rules('user_password', 'user_password', 'trim|required|min_length[8]|max_length[30]');
+        $this->form_validation->set_rules('user_phoneBrand', 'user_phoneBrand', 'trim|required|min_length[3]|max_length[30]');
+        $this->form_validation->set_rules('user_gender', 'user_gender', 'trim|required|min_length[2]|max_length[30]');
+        $this->form_validation->set_rules('user_policy', 'user_policy', 'trim|required|min_length[1]|max_length[30]');
+        $this->form_validation->set_rules('user_email','user_email', 'trim|required|valid_email');
 
-        $returned = $this->Model_user->signin($user_name,$user_password,$user_gender,$user_policy,$user_email,$user_phoneBrand);
+        if ($this->form_validation->run() == FALSE) // S'il y a des choses incorrectes
+        {
+                $response = [
+                    'message' => validation_errors('<span class="error">', '</span>'); //On en prépare le message d'erreur qui stocke tous les champs avec erreurs
+                ];
+        }
+        else
+        { //Si tout est ok, on récupère toutes les entrés et on va à la base de données
+            $user_name = $this->post['user_name'];
+            $user_password = $this->post['user_password'];
+            $user_gender = $this->post['user_gender'];
+            $user_policy = $this->post['user_policy'];
+            $user_email = $this->post['user_email'];
+            $user_phoneBrand = $this->['user_phoneBrand'];
 
-        if($returned==true){
+            $returned = $this->User->signup($user_name,$user_password,$user_gender,$user_policy,$user_email,$user_phoneBrand);
 
-            $response = [
-                'message' => 'ok';
-            ];
+            if($returned){
 
-        }else{
-            $response = [
-                'message' => 'fail';
-            ];
+                //We send email to confirm registration
+                $this->Wimanili_mailer->sender(EMAIL_MESSSAGE_CONFIRMATION,EMAIL_SUBJECT_CONFIRMATION,$user_email);
+
+
+                $response = [
+                    'message' => 'ok';
+                ];
+
+            }else{
+                $response = [
+                    'message' => 'fail';
+                ];
+            }
         }
 
         $this->set_response($response, REST_Controller::HTTP_CREATED);
@@ -98,20 +121,35 @@ class Wimanili_user extends REST_Controller {
     //Login
     public function login_post()
     {
-        $user_name = $this->post['user_name_or_password'];
-        $user_password = $this->post['user_password'];
+         //On valide le formaulaire
+        $this->form_validation->set_rules('user_name_or_email', 'user_name_or_password', 'trim|required|min_length[5]|max_length[30]');
+        $this->form_validation->set_rules('user_password', 'user_password', 'trim|required|min_length[8]|max_length[30]');
 
-        $returned = $this->Model_user->signin($user_name,$user_password,$user_gender,$user_policy,$user_email,$user_phoneBrand);
+        if ($this->form_validation->run() == FALSE) // S'il y a des choses incorrectes
+        {
+                $response = [
+                    'message' => validation_errors('<span class="error">', '</span>'); //On en prépare le message d'erreur qui stocke tous les champs avec erreurs
+                ];
+        }
+        else
+        { //Si tout est ok, on récupère toutes les entrés et on va à la base de données
 
-        if($returned){
+            $user_name_or_email = $this->post['user_name_or_email'];
+            $user_password = $this->post['user_password'];
 
-            $response = [
-                'response' => $response;
-            ];
-        }else{
-            $response = [
-                'response' => 'fail';
-            ];
+            $returned = $this->User->login($user_name_or_email,$user_password);
+
+            if($returned){
+
+                $response = [
+                    'response' => $response;
+                ];
+            }else{
+                $response = [
+                    'response' => 'fail';
+                ];
+            }
+
         }
     }
 
@@ -129,7 +167,7 @@ class Wimanili_user extends REST_Controller {
 
         if($user_token){
 
-            $returned = $this->Model_user->UpdateUsername($user_token,$user_id,$user_name);
+            $returned = $this->User->UpdateUsername($user_token,$user_id,$user_name);
 
             if($returned==true){
 
@@ -159,7 +197,7 @@ class Wimanili_user extends REST_Controller {
 
         if($user_token){
 
-            $returned = $this->Model_user->UpdateUserPassword($user_token,$user_id,$user_password);
+            $returned = $this->User->UpdateUserPassword($user_token,$user_id,$user_password);
 
             if($returned==true){
 
@@ -188,7 +226,7 @@ class Wimanili_user extends REST_Controller {
 
         if($user_token){
 
-            $returned = $this->Model_user->UpdateUserPolicy($user_token,$user_id,$user_policy);
+            $returned = $this->User->UpdateUserPolicy($user_token,$user_id,$user_policy);
 
             if($returned==true){
 
@@ -216,7 +254,7 @@ class Wimanili_user extends REST_Controller {
 
         if($user_token){
 
-            $returned = $this->Model_user->UpdateUserEmail($user_token,$user_id,$user_email);
+            $returned = $this->User->UpdateUserEmail($user_token,$user_id,$user_email);
 
             if($returned){
 
@@ -245,7 +283,7 @@ class Wimanili_user extends REST_Controller {
 
         if($user_token){
 
-            $returned = $this->Model_user->UpdateUserPhoneBrand($user_token,$user_id,$user_phoneBrand);
+            $returned = $this->User->UpdateUserPhoneBrand($user_token,$user_id,$user_phoneBrand);
 
             if($returned==true){
 
@@ -275,7 +313,7 @@ class Wimanili_user extends REST_Controller {
 
         if($user_token && $user_my_role==2){ //Si je suis admin et que j'ai mon token
 
-            $returned = $this->Model_user->UpdateUserRole($user_token,$user_id,$user_role);
+            $returned = $this->User->UpdateUserRole($user_token,$user_id,$user_role);
 
             if($returned==true){
 
@@ -309,7 +347,7 @@ class Wimanili_user extends REST_Controller {
 
         if($user_role==2){//2 pour dire si je suis admin. Voir lexique plus haut de ce fichier
 
-            $returned = $this->Model_user->BannUser($user_id);
+            $returned = $this->User->BannUser($user_id);
 
             if($returned==true){
 
@@ -331,56 +369,82 @@ class Wimanili_user extends REST_Controller {
     //Pour suivre un utilisateur
     public function followuser_post()
     {
-        $user_token      = $this->post['user_token'];
-        $user_id  = $this->post['user_id'];
-        $user_followed_id  = $this->post['user_followed_id'];
+        //On valide le formaulaire
+        $this->form_validation->set_rules('user_token', 'user_token', 'trim|required|min_length[1]');
+        $this->form_validation->set_rules('user_id', 'user_id', 'trim|required|min_length[1]');
+        $this->form_validation->set_rules('user_followed_id', 'user_followed_id', 'trim|required|min_length[1]');
 
-
-        if($user_token){
-
-            $returned = $this->Model_user->FollowUser($user_token,$user_id,$user_followed_id);
-
-            if($returned==true){
-
+        if ($this->form_validation->run() == FALSE) // S'il y a des choses incorrectes
+        {
                 $response = [
-                    'message' => 'ok';
+                    'message' => validation_errors('<span class="error">', '</span>'); //On en prépare le message d'erreur qui stocke tous les champs avec erreurs
                 ];
-
-            }else{
-                $response = [
-                    'message' => 'fail';
-                ];
-            }
-
-            $this->set_response($response, REST_Controller::HTTP_CREATED);
         }
+        else{
+
+            $user_token = $this->post['user_token'];
+            $user_id  = $this->post['user_id'];
+            $user_followed_id  = $this->post['user_followed_id'];
+
+
+            if($user_token){
+
+                $returned = $this->User->FollowUser($user_token,$user_id,$user_followed_id);
+
+                if($returned==true){
+
+                    $response = [
+                        'message' => 'ok';
+                    ];
+
+                }else{
+                    $response = [
+                        'message' => 'fail';
+                    ];
+                }
+
+            }
+        }
+
+        $this->set_response($response, REST_Controller::HTTP_CREATED);
     }
 
 
     //Obtenir la list des personnes suivant un utilisateur précis
     public function Followerlist_post()
     {
-        $user_token         = $this->post['user_token'];
-        $user_id            = $this->post['user_id'];
+        $this->form_validation->set_rules('user_id', 'user_id', 'trim|required|min_length[1]');
 
-        if($user_token){
-
-            $returned = $this->Model_user->FollowerList($user_token,$user_id);
-
-            if($returned){
-
-                $response = [
-                    'followers' => $response;
-                ];
-
-            }else{
-                $response = [
-                    'message' => 'fail';
-                ];
-            }
-
-            $this->set_response($response, REST_Controller::HTTP_CREATED);
+        if ($this->form_validation->run() == FALSE) // S'il y a des choses incorrectes
+        {
+            $response = [
+                    'message' => validation_errors('<span class="error">', '</span>'); //On en prépare le message d'erreur qui stocke tous les champs avec erreurs
+            ];
         }
+        else{
+            $user_token         = $this->post['user_token'];
+            $user_id            = $this->post['user_id'];
+
+            if($user_token){
+
+                $returned = $this->User->FollowerList($user_id);
+
+                if($returned){
+
+                    $response = [
+                        'followers' => $returned;
+                    ];
+
+                }else{
+                    $response = [
+                        'message' => 'fail';
+                    ];
+                }
+
+            }
+        }
+
+        $this->set_response($response, REST_Controller::HTTP_CREATED);
     }
 
 
@@ -394,7 +458,7 @@ class Wimanili_user extends REST_Controller {
 
         if($user_token){
 
-            $returned = $this->Model_user->IsFollower($user_token,$user_id,$follower_id);
+            $returned = $this->User->IsFollower($user_token,$user_id,$follower_id);
 
             if($returned){
 
@@ -421,7 +485,7 @@ class Wimanili_user extends REST_Controller {
 
         if($user_token){
 
-            $returned = $this->Model_user->confirmnewuser($user_token);
+            $returned = $this->User->confirmnewuser($user_token);
 
             if($returned){
 

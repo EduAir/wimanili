@@ -49,11 +49,27 @@ class Wimanili_mailer extends REST_Controller {
 
     public function sendmail_post()
     {
-        $message = $this->post['message'];
-        $subject = $this->post['subject'];
+        $message = EMAIL_MESSSAGE_CONFIRMATION;
+        $subject = EMAIL_SUBJECT_CONFIRMATION;
         $receiver = $this->post['receiver'];   
 
 
+        $response = sender($message,$subject,$receiver);
+
+        $message = [
+                'message' => $response
+            ];
+
+        $this->set_response($message, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
+    }
+
+
+
+
+
+    //Inscriptions
+    public function sender($message,$subject,$receiver)
+    {
         // Get full html:
         $body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml">
@@ -84,28 +100,15 @@ class Wimanili_mailer extends REST_Controller {
         // // End attaching the logo.
 
         $result = $this->email
-            ->from($EMAIL_NO_REPLY)
+            ->from(MAIL_NO_REPLY)//MAIL_NO_REPLY est une constate globale qui stoke l'adresse mail noreply du projet. Voir /application/config/constant.php
             ->to($receiver)
             ->subject($subject)
             ->message($body)
             ->send();
 
-        $message = [
-            'message' => $this->email->print_debugger()
-        ];
 
-        $this->set_response($message, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
-    }
+        return $this->email->print_debugger();
 
-
-    //Inscriptions
-    public function signin()
-    {
-       $first_name = $this->post['first_name'];
-        $last_name = $this->post['last_name'];
-        $gender = $this->post['gender'];
-        $profile_pic = $this->post['profile_pic_url'];
-        $id_messenger = $this->post['messenger_user_id'];
     }
 
 

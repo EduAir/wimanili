@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mer 26 Février 2020 à 19:55
+-- Généré le :  Ven 28 Février 2020 à 12:17
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `wimanili_follower` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `follower_id` int(11) NOT NULL,
+  `createdAt` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -145,6 +146,8 @@ CREATE TABLE IF NOT EXISTS `wimanili_user` (
   `user_createdAt` int(11) NOT NULL,
   `user_UpdatedAt` int(11) NOT NULL,
   `user_email` varchar(250) NOT NULL,
+  `user_picture` varchar(255) NOT NULL,
+  `user_role` int(3) NOT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

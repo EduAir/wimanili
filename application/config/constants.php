@@ -89,3 +89,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 //////////////////////////////////////////////CUSTOM CONSTANT FOR WIMANILI///////////////////////////////////////////////
 defined('EMAIL_NO_REPLY') OR define('EMAIL_NO_REPLY','noreply@wimanili.com');
+defined('EMAIL_MESSSAGE_CONFIRMATION') OR define('EMAIL_MESSSAGE_CONFIRMATION','Cliquez sur le lien suivant pour valider votre inscription');
+defined('EMAIL_SUBJECT_CONFIRMATION') OR define('EMAIL_SUBJECT_CONFIRMATION','Confirmation Wimanili');
+
+
