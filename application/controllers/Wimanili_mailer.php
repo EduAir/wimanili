@@ -54,7 +54,7 @@ class Wimanili_mailer extends REST_Controller {
         $receiver = $this->post['receiver'];   
 
 
-        $response = sender($message,$subject,$receiver);
+        $response = $this->sender($message,$subject,$receiver);
 
         $message = [
                 'message' => $response
